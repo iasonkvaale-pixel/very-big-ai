@@ -1,11 +1,13 @@
 const MODEL = "llama-3.1-8b-instant";
 
+document.getElementById("send").addEventListener("click", sendMessage);
+
 async function sendMessage() {
-    const input = document.getElementById("user-input");
+    const input = document.getElementById("input");
     const text = input.value.trim();
     if (!text) return;
 
-    addMessage("user", text);
+    addMessage("user-message", text);
     input.value = "";
 
     try {
@@ -21,23 +23,25 @@ async function sendMessage() {
         const data = await response.json();
 
         if (!data.choices) {
-            addMessage("bot", "Error: " + JSON.stringify(data));
+            addMessage("bot-message", "Error: " + JSON.stringify(data));
             return;
         }
 
         const reply = data.choices[0].message.content;
-        addMessage("bot", reply);
+        addMessage("bot-message", reply);
 
     } catch (err) {
-        addMessage("bot", "Network error: " + err.message);
+        addMessage("bot-message", "Network error: " + err.message);
     }
 }
 
-function addMessage(sender, text) {
-    const box = document.getElementById("chat-box");
-    const div = document.createElement("div");
-    div.className = "message";
-    div.innerHTML = `<span class="${sender}">${sender}:</span> ${text}`;
-    box.appendChild(div);
+function addMessage(className, text) {
+    const box = document.getElementById("messages");
+
+    const p = document.createElement("p");
+    p.className = className;
+    p.textContent = text;
+
+    box.appendChild(p);
     box.scrollTop = box.scrollHeight;
 }
