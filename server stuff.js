@@ -1,11 +1,12 @@
 const express = require("express");
 const cors = require("cors");
+const fetch = require("node-fetch"); 
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-const API_KEY = "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";
+const API_KEY = process.env.GROQ_API_KEY; 
 
 app.post("/chat", async (req, res) => {
   try {
